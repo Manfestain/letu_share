@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>HMOE</title>
+</head>
+<body>
+<#list colors as color>
+    ${color}
+</#list>
+
+<#if 1 == 1 >
+    ${value1}
+</#if>
+
+<#assign keys=map?keys/>
+<#list map?keys as key>
+    ${key}
+    ${map["${key}"]}
+</#list>
+
+</body>
+</html>
