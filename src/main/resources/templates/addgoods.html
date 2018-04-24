@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>添加商品</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+</head>
+<body>
+    <div class="index-header">
+        <h1 class="logo hide-text"><img src="../images/res/nk.png" alt=""></h1>
+        <h2 class="subtitle">
+            <#if msg != "">
+                <font color="#dc143c">${msg}</font>
+                <#else>
+                    与世界分享你的知识、经验和见解
+            </#if>
+
+        </h2>
+    </div>
+    <form class="container" enctype="multipart/form-data" method="post" id='addCommodityForm' name="addCommodityForm">
+			<div class="input-wrapper">
+                <input type="" name="commodityname" aria-label="美食名称" placeholder="美食名称" required="">
+            </div>  
+            <div class="input-wrapper">
+                 <input type="" name="commoditytype" aria-label="美食类型" placeholder="美食类型" required="">
+            </div>
+            <div class="input-wrapper">
+                <input type="text" name="recommend" aria-label="美食描述" placeholder="美食描述" required="">
+            </div> 
+            <div class="input-wrapper">
+                <input type="" name="region" aria-label="所属地区" placeholder="所属地区" required="">
+            </div> 
+            <div>
+            	<input type="file" id="commodityimage" name="commodityimage">
+            </div>
+            <div class="button-wrapper command clearfix">
+            	<button class="sign-button submit" type="submit" onclick="form=document.getElementById('addCommodityForm');form.action='/addcommodity/'">提交</button>
+        	</div>     
+     </form>  
+</body>
+</html>
+
+    
