@@ -10,10 +10,7 @@ import com.qiniu.storage.UploadManager;
 import com.qiniu.storage.model.DefaultPutRet;
 import com.qiniu.util.Auth;
 
-import java.io.ByteArrayInputStream;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -38,9 +35,9 @@ public class QiniuUtil {
     }
 
     // 字节数组上传
-    public Map<String, String> uploadFile(String content) {
+    public Map<String, String> uploadFile(String content, String fileExtension) {
         ByteArrayInputStream inputStream = new ByteArrayInputStream(content.getBytes());
-        String key = UUID.randomUUID().toString().replaceAll("-", "") + ".jpg";
+        String key = UUID.randomUUID().toString().replaceAll("-", "") + "." + fileExtension;
         Map<String, String> map = new HashMap<String, String>();
 
         String upToken = getUpToken();
@@ -65,14 +62,14 @@ public class QiniuUtil {
         }
     }
 
-    // 数据流上传
-    public Map<String, String> uploadFile(FileInputStream inputStream) {
+    // 文件上传
+    public Map<String, String> uploadFile(File file, String fileExtension) {
         Map<String, String> map = new HashMap<String, String>();
-        String key = UUID.randomUUID().toString().replaceAll("-", "") + ".jpg";
+        String key = UUID.randomUUID().toString().replaceAll("-", "") + "." + fileExtension;
         String upToken = getUpToken();
 
         try {
-            Response response = uploadManager.put(inputStream, key, upToken, null, null);
+            Response response = uploadManager.put(file, key, upToken);
             DefaultPutRet putRet = new Gson().fromJson(response.bodyString(), DefaultPutRet.class);
             map.put("key", putRet.key);
             map.put("domain", domain);

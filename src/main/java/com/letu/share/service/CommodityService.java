@@ -6,6 +6,7 @@ import com.letu.share.model.Commodity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.util.HashMap;
 import java.util.Map;
@@ -20,13 +21,13 @@ public class CommodityService {
                                             String commoditytype,
                                             String recommend,
                                             String region,
-                                            FileInputStream picture,
+                                            File picture,
+                                            String fileExtension,
                                             float price) {
         QiniuUtil qiniuUtil = new QiniuUtil();
-//        Map<String, String> map = new HashMap<String, String>();
 
         // 将图片上传到七牛云
-        Map<String, String> map = qiniuUtil.uploadFile(picture);
+        Map<String, String> map = qiniuUtil.uploadFile(picture, fileExtension);
         if (map.containsKey("msg")) {
             return map;
         }

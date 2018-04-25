@@ -1,18 +1,33 @@
 package com.letu.share.Util;
 
-import org.apache.tomcat.util.http.fileupload.disk.DiskFileItem;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.UUID;
 
-// 将MultipartFile转换为File
+// MultipartFile工具类
 public class MultipartFileUtil {
 
-    public File multipartFiletoFile(MultipartFile multipartFile) {
-        CommonsMultipartFile commonsMultipartFile = (CommonsMultipartFile) multipartFile;
-        DiskFileItem diskFileItem = (DiskFileItem) commonsMultipartFile.getFileItem();
-        File file = diskFileItem.getStoreLocation();
-        return file;
+    // 转为File
+    public File multipartFiletoFile(MultipartFile multipartFile, String prefix) {
+        try {
+            final File tempFile = File.createTempFile(UUID.randomUUID().toString().replaceAll("-", ""), prefix);
+            multipartFile.transferTo(tempFile);
+            return tempFile;
+        } catch (IOException e) {
+            System.out.println("创建临时文件出错");
+            return null;
+        }
     }
+
+    // 删除临时文件
+    public void deleteFile(File... files) {
+        for (File file : files) {
+            if (file.exists()) {
+                file.delete();
+            }
+        }
+    }
+
 }

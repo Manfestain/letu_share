@@ -1,9 +1,7 @@
 package com.letu.share.controller;
 
 import com.letu.share.Util.MultipartFileUtil;
-import com.letu.share.dao.CommdityDAO;
 import com.letu.share.service.CommodityService;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,8 +12,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
-import java.io.FileInputStream;
 import java.util.Map;
+import java.util.UUID;
 
 @Controller
 public class AddCommodityController {
@@ -40,14 +38,25 @@ public class AddCommodityController {
                                HttpServletResponse servletResponse) {
         MultipartFileUtil multipartFileUtil = new MultipartFileUtil();
         try {
-            String fileExtension = commodityimage.getOriginalFilename().substring(commodityimage.getOriginalFilename().lastIndexOf("."));
-            File file = multipartFileUtil.multipartFiletoFile(commodityimage);
-            Map<String, String> map = commodityService.addCommodity(commodityname, commoditytype,
-                    recommend, region, file, fileExtension, price);
-            model.addAttribute("msg", map.get("msg"));
-            return "redirect:/";
+            // MultipartFile转为File
+            String fileName = commodityimage.getOriginalFilename();
+            String fileExtension = fileName.substring(commodityimage.getOriginalFilename().lastIndexOf("."));
+            final File file = multipartFileUtil.multipartFiletoFile(commodityimage, fileExtension);
+
+            // 业务逻辑
+            if (file != null) {
+                Map<String, String> map = commodityService.addCommodity(commodityname, commoditytype,
+                        recommend, region, file, fileExtension, price);
+                model.addAttribute("msg", map.get("msg"));
+
+                return "redirect:/";
+            } else {
+                model.addAttribute("msg", "上传出错, 请重新上传");
+                return "addgoods";
+            }
+
         } catch (Exception e) {
-            model.addAttribute("msg", "上传出错");
+            model.addAttribute("msg", "上传出错, 请重新上传");
             return "addgoods";
         }
 

@@ -64,25 +64,25 @@ public class InitDatabaseTests {
 //
 //    }
 
-    @Test
-    public void init_commodity() {
-        String name = "肉夹馍";
-        String type = "饼";
-        String recommend = "是一种非常好吃的陕西美食";
-        String region = "西安";
-        float price = 5;
-        try {
-            FileInputStream inputStream = new FileInputStream("E:/roujiamo.jpg");
-            Scanner scanner = new Scanner(inputStream);
-            String content = scanner.useDelimiter("\\A").next();
-
-            Map<String, String> map = commodityService.addCommodity(name, type, recommend, region, inputStream, price);
-            System.out.println(map.get("key"));
-            System.out.println(map.get("hash"));
-        } catch (Exception e) {
-            System.out.println("出错");
-        }
-
-    }
+//    @Test
+//    public void init_commodity() {
+//        String name = "肉夹馍";
+//        String type = "饼";
+//        String recommend = "是一种非常好吃的陕西美食";
+//        String region = "西安";
+//        float price = 5;
+//        try {
+//            FileInputStream inputStream = new FileInputStream("E:/roujiamo.jpg");
+//            Scanner scanner = new Scanner(inputStream);
+//            String content = scanner.useDelimiter("\\A").next();
+//
+//            Map<String, String> map = commodityService.addCommodity(name, type, recommend, region, inputStream, "jpg", price);
+//            System.out.println(map.get("key"));
+//            System.out.println(map.get("hash"));
+//        } catch (Exception e) {
+//            System.out.println("出错");
+//        }
+//
+//    }
 
 }
