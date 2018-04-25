@@ -20,6 +20,11 @@ public class UserService {
     @Autowired
     LoginTicketService loginTicketService;
 
+    // 通过用户Id查询用户
+    public User getUserById(int userId) {
+        return userDAO.selectById(userId);
+    }
+
 
     ///处理用户登陆时的验证
     public Map<String, String> login(String username, String password) {

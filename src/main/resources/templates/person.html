@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>个人主页</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+</head>
+<body>
+    <div class="index-header">
+        <h1 class="logo hide-text"><img src="../images/res/nk.png" alt=""></h1>
+        <img class="Avatar" src="${user.headURL}" width="50", height="50"><br/>
+        <h4 class="subtitle">
+            <font color="#dc143c">${user.name}，欢迎回来！</font>
+        </h4>
+        性别：${user.gender}<br/>
+        电话：${user.phone}<br/>
+    </div>
+    ----------------------------------------------------------------------------------<br/>
+    <div>
+        <form id="postingForm" method="post">
+            <input type="hidden" name="_xsrf" value="21aa1c8d254df2899b23ab9afbd62a53">
+            <div class="group-inputs">
+                <div class="email input-wrapper">
+                    <input type="" name="title" aria-label="主题" placeholder="主题" required="">
+                </div>
+                <div class="input-wrapper">
+                    <input type="text" name="content" aria-label="内容" placeholder="内容" required="" width="200", height="100">
+                </div>
+            </div>
+            <div class="button-wrapper command clearfix">
+                <button class="sign-button submit" type="submit" onclick="form=document.getElementById('postingForm');form.action='/person/${user.id}/addposting'">发布</button>
+            </div>
+        </form>
+    </div>
+    -------------------------------------------------------------------------------------<br/>
+    <div>
+        <#if flag == "OK">
+            <#list vos as vo>
+                ----------------------------------------------------------------------<br/>
+                名称：${vo.posting.title}<br/>
+                内容：${vo.posting.content}<br/>
+
+                评论总数：${vo.posting.count}<br/>
+            </#list>
+        </#if>
+    </div>
+
+</body>
+</html>

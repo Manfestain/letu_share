@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -23,7 +24,8 @@ public class CommodityService {
                                             String region,
                                             File picture,
                                             String fileExtension,
-                                            float price) {
+                                            float price,
+                                            int userId) {
         QiniuUtil qiniuUtil = new QiniuUtil();
 
         // 将图片上传到七牛云
@@ -40,11 +42,40 @@ public class CommodityService {
         String pictureURl = map.get("domain") + map.get("key");
         commodity.setPicture(pictureURl);
         commodity.setPrice(price);
+        commodity.setUserId(userId);
 
         commdityDAO.addCommodity(commodity);
         map.clear();
         map.put("msg", "商品添加成功");
         return map;
+    }
 
+    // 获取商品信息
+    public List<Commodity> getCommodity(int userId) {
+        return commdityDAO.selectByUserId(userId);
+    }
+
+    // 删除商品
+    public Map<String, String>deleteCommodity(int id) {
+        Map<String, String> map = new HashMap<String, String>();
+        QiniuUtil qiniuUtil = new QiniuUtil();
+
+        Commodity commodity = commdityDAO.selectById(id);
+        if (commodity == null) {
+            map.put("msg", "删除商品出错，请重新删除");
+            return map;
+        }
+
+        String picture = commodity.getPicture();
+        String filename = picture.substring(picture.lastIndexOf("/"));
+        Map<String, String> tempMap = qiniuUtil.deleteFile(filename);
+        if (tempMap.containsKey("msg")) {
+            map.put("msg", tempMap.get("key"));
+            return map;
+        }
+
+        commdityDAO.deleteById(id);
+        map.put("key", "删除商品成功");
+        return map;
     }
 }

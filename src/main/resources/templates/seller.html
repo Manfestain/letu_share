@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>商家页面</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+</head>
+<body>
+    <div class="index-header">
+        <h1 class="logo hide-text"><img src="../images/res/nk.png" alt=""></h1>
+        <h4 class="subtitle">
+            <font color="#dc143c">${userName}，这是您的店面：</font>
+        </h4>
+    </div>
+    <div>
+        <#if flag == "OK">
+            <#list vos as vo>
+                ----------------------------------------------------------------------<br/>
+                <img class="Avatar" src="${vo.commodity.picture}" width="100", height="100"><br/>
+                名称：${vo.commodity.name}<br/>
+                类型：${vo.commodity.type}<br/>
+                地区：${vo.commodity.region}<br/>
+                价格：${vo.commodity.price}元<br/>
+                简介：${vo.commodity.recommend}<br/>
+            </#list>
+        </#if>
+    </div>
+
+</body>
+</html>

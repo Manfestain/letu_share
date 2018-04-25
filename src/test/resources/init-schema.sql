@@ -33,5 +33,6 @@
   `recommend` TEXT NULL,
   `region` VARCHAR(45) NULL,
   `price` INT NOT NULL,
+  `user_id` INT NOT NULL,
   PRIMARY KEY (`id`))
 ENGINE=InnoDB DEFAULT CHARSET=utf8;

@@ -1,6 +1,7 @@
 package com.letu.share.dao;
 
 import com.letu.share.model.User;
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
@@ -23,4 +24,7 @@ public interface UserDAO {
 
     @Select({"select", SELECT_FIELDS, "from", TABLE_NAME, "where phone=#{phone}"})
     User selectByPhone(String phone);
+
+    @Delete({"delete from", TABLE_NAME, "where name=#{name}"})
+    void deleteByName(String name);
 }

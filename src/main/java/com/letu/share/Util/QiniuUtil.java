@@ -37,7 +37,7 @@ public class QiniuUtil {
     // 字节数组上传
     public Map<String, String> uploadFile(String content, String fileExtension) {
         ByteArrayInputStream inputStream = new ByteArrayInputStream(content.getBytes());
-        String key = UUID.randomUUID().toString().replaceAll("-", "") + "." + fileExtension;
+        String key = UUID.randomUUID().toString().replaceAll("-", "") + fileExtension;
         Map<String, String> map = new HashMap<String, String>();
 
         String upToken = getUpToken();
@@ -65,7 +65,7 @@ public class QiniuUtil {
     // 文件上传
     public Map<String, String> uploadFile(File file, String fileExtension) {
         Map<String, String> map = new HashMap<String, String>();
-        String key = UUID.randomUUID().toString().replaceAll("-", "") + "." + fileExtension;
+        String key = UUID.randomUUID().toString().replaceAll("-", "") + fileExtension;
         String upToken = getUpToken();
 
         try {
@@ -90,7 +90,6 @@ public class QiniuUtil {
 
         try {
             bucketManager.delete(bucketName, key);
-            map.put("msg", "删除成功");
         } catch (QiniuException ex) {
             map.put("msg", ex.response.toString());
         } finally {
