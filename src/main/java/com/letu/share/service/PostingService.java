@@ -17,9 +17,25 @@ public class PostingService {
     PostingDAO postingDAO;
 
     // 通过userId获取帖子
-    public List<Posting> getPosting(int userId) {
+    public List<Posting> getPostingByUserId(int userId) {
         return postingDAO.selectByUserId(userId);
     }
+
+    // 通过Id获得帖子
+    public Posting getPostingById(int Id) {
+        return postingDAO.selectById(Id);
+    }
+
+    // 通过Id更新评论数
+    public Map<String, String> updatePostingCount(int Id) {
+        Map<String, String> map = new HashMap<String, String>();
+        Posting posting = postingDAO.selectById(Id);
+        int count = posting.getCount() + 1;
+        postingDAO.updateCommentCount(count, Id);
+        map.put("msg", "更新成功");
+        return map;
+    }
+
 
     // 添加帖子
     public Map<String, String> addPosting(int userId, String title, String content) {
@@ -40,6 +56,5 @@ public class PostingService {
 
         map.put("msg", "添加成功");
         return map;
-
     }
 }

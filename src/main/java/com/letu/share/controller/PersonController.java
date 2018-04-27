@@ -1,5 +1,6 @@
 package com.letu.share.controller;
 
+import com.letu.share.model.Comment;
 import com.letu.share.model.Posting;
 import com.letu.share.model.User;
 import com.letu.share.model.ViewObject;
@@ -35,7 +36,7 @@ public class PersonController {
     public String displayPerson(Model model,
                                 @PathVariable("userId") int userId) {
 
-        List<Posting> postingList = postingService.getPosting(userId);
+        List<Posting> postingList = postingService.getPostingByUserId(userId);
         List<ViewObject> vos = new ArrayList<ViewObject>();
 
         User user = userService.getUserById(userId);
@@ -55,8 +56,42 @@ public class PersonController {
         return "person";
     }
 
+    // 帖子详细页面
+    @RequestMapping(value = {"/posting/{postingId}/"}, method = {RequestMethod.GET})
+    public String postingDetail(Model model,
+                                @PathVariable("postingId") int postingId) {
+
+        Posting posting = postingService.getPostingById(postingId);
+        List<ViewObject> vos = new ArrayList<ViewObject>();
+        List<Comment> commentList = commentService.getCommentByPostingId(postingId);
+
+        User user =userService.getUserById(posting.getUserId());
+        model.addAttribute("user", user);
+
+        if (posting != null) {
+            model.addAttribute("posting", posting);
+            if (commentList != null) {
+                for(Comment comment: commentList) {
+                    ViewObject vo = new ViewObject();
+                    vo.set("comment", comment);
+                    vo.set("sendU", userService.getUserById(comment.getSendId()));
+                    vos.add(vo);
+                }
+            } else {
+                ViewObject vo = new ViewObject();
+                vo.set("flag", "您的帖子还没有评论哦！");
+                vos.add(vo);
+            }
+        } else {
+            model.addAttribute("msg", "打开出错！");
+            return "redirect:/";
+        }
+        model.addAttribute("vos", vos);
+        return "posting";
+    }
+
     // 添加帖子
-    @RequestMapping(value = {"/person/{userId}/addposting"}, method = {RequestMethod.POST})
+    @RequestMapping(value = {"/posting/{userId}/addposting"}, method = {RequestMethod.POST})
     public String addPosting(Model model,
                              @PathVariable("userId") int userId,
                              @RequestParam("title") String title,
@@ -67,9 +102,10 @@ public class PersonController {
     }
 
     // 添加帖子评论
-    @RequestMapping(value = {"/person/{postingId}/"}, method = {RequestMethod.POST})
+    @RequestMapping(value = {"/posting/{postingId}/{userId}/"}, method = {RequestMethod.POST})
     public String addPostingComment(Model model,
                                     @PathVariable("postingId") int postingId,
+                                    @PathVariable("userId") int userId,
                                     @RequestParam("sendId") int sendId,
                                     @RequestParam("content") String content) {
         Map<String, String> map = commentService.addComment(0, postingId, sendId, content);

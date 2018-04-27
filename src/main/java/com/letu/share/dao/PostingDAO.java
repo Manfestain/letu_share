@@ -1,9 +1,7 @@
 package com.letu.share.dao;
 
 import com.letu.share.model.Posting;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -19,4 +17,11 @@ public interface PostingDAO {
 
     @Select({"select", SELECT_FIELDS, "from", TABLE_NAME, "where user_id=#{userId}"})
     List<Posting> selectByUserId(int userId);
+
+    @Select({"select", SELECT_FIELDS, "from", TABLE_NAME, "where id=#{Id}"})
+    Posting selectById(int Id);
+
+    @Update({"update", TABLE_NAME, "set comment_count=#{commentCount} where id=#{id}"})
+    int updateCommentCount(@Param("commentCount") int commentCount,
+                           @Param("id") int id);
 }

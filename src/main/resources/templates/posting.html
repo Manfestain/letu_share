@@ -1,21 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>个人主页</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-</head>
+    <head>
+        <meta charset="UTF-8">
+        <title>帖子</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
 <body>
     <div class="index-header">
         <h1 class="logo hide-text"><img src="../images/res/nk.png" alt=""></h1>
-        <img class="Avatar" src="${user.headURL}" width="50", height="50"><br/>
         <h4 class="subtitle">
-            <font color="#dc143c">${user.name}，欢迎回来！</font>
+            <font color="#dc143c">${posting.title}</font>
         </h4>
-        性别：${user.gender}<br/>
-        电话：${user.phone}<br/>
+        作者：${user.name}<br/>
+        时间：${posting.createdDate?string('yyyy-MM-dd')}<br/>
+        评论数：${posting.count}<br/>
     </div>
     ----------------------------------------------------------------------------------<br/>
+    <div>
+        ${posting.content}<br/>
+    </div>
     <div>
         <form id="postingForm" method="post">
             <input type="hidden" name="_xsrf" value="21aa1c8d254df2899b23ab9afbd62a53">
@@ -34,16 +37,13 @@
     </div>
     -------------------------------------------------------------------------------------<br/>
     <div>
-        <#if flag == "OK">
             <#list vos as vo>
                 ----------------------------------------------------------------------<br/>
-                <a href="/posting/${vo.posting.id}/">名称：${vo.posting.title}</a><br/>
-                内容：${vo.posting.content}<br/>
-                时间：${vo.posting.createdDate?string('yyyy-MM-dd')}<br/>
-                评论总数：${vo.posting.count}<br/>
+                <img src="${vo.sendU.headURL}" width="20", height="20"><br/>
+                昵称：${vo.sendU.name}<br/>
+                内容：${vo.comment.content}<br/>
+                时间：${vo.comment.createdDate?string('yyyy-MM-dd')}<br/>
             </#list>
-        </#if>
     </div>
-
 </body>
 </html>
