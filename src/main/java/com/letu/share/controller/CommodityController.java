@@ -3,6 +3,7 @@ package com.letu.share.controller;
 import com.letu.share.Util.MultipartFileUtil;
 import com.letu.share.model.Commodity;
 import com.letu.share.model.ViewObject;
+import com.letu.share.service.CommentService;
 import com.letu.share.service.CommodityService;
 import com.letu.share.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,9 @@ public class CommodityController {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    CommentService commentService;
 
     @RequestMapping(value = {"/addcom"}, method = {RequestMethod.GET})
     public String addCommodityPage(Model model,
@@ -92,6 +96,17 @@ public class CommodityController {
         }
         model.addAttribute("flag", "");
         return "seller";
+    }
+
+    // 添加商品评论
+    @RequestMapping(value = {"/shop/{commodityId}/"}, method = {RequestMethod.POST})
+    public String addCommodityComment(Model model,
+                                      @PathVariable("commodityId") int commodityId,
+                                      @RequestParam("sendId") int sendId,
+                                      @RequestParam("content") String content) {
+        Map<String, String> map = commentService.addComment(1, commodityId, sendId, content);
+        model.addAttribute("msg", map.get("msg"));
+        return "";
     }
 
 }

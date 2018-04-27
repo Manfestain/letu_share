@@ -24,6 +24,27 @@
 --     UNIQUE INDEX `phone_UNIQUE` (`phone` ASC))
 --   ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+-- CREATE TABLE `letu`.`posting_comment` (
+--   `id` INT NOT NULL AUTO_INCREMENT,
+--   `rec_id` INT NOT NULL,
+--   `send_id` INT NOT NULL,
+--   `content` TEXT NOT NULL,
+--   `created_date` DATETIME NOT NULL,
+--   `status` INT NOT NULL,
+--   PRIMARY KEY (`id`))
+-- ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- CREATE TABLE `letu`.`commodity_comment` (
+--   `id` INT NOT NULL AUTO_INCREMENT,
+--   `commodity_id` INT NOT NULL,
+--   `send_id` INT NOT NULL,
+--   `content` TEXT NOT NULL,
+--   `created_date` DATETIME NOT NULL,
+--   `status` INT NOT NULL,
+--   PRIMARY KEY (`id`))
+-- ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
   DROP TABLE IF EXISTS commodity_info;
   CREATE TABLE `commodity_info` (
   `id` INT NOT NULL AUTO_INCREMENT,

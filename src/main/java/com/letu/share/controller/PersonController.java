@@ -3,6 +3,7 @@ package com.letu.share.controller;
 import com.letu.share.model.Posting;
 import com.letu.share.model.User;
 import com.letu.share.model.ViewObject;
+import com.letu.share.service.CommentService;
 import com.letu.share.service.PostingService;
 import com.letu.share.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,9 @@ public class PersonController {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    CommentService commentService;
 
     // 展示个人主页
     @RequestMapping(value = {"/person/{userId}/"}, method = {RequestMethod.GET})
@@ -60,5 +64,16 @@ public class PersonController {
         Map<String, String> map = postingService.addPosting(userId, title, content);
         return String.format("redirect:/person/%d/", userId);
 
+    }
+
+    // 添加帖子评论
+    @RequestMapping(value = {"/person/{postingId}/"}, method = {RequestMethod.POST})
+    public String addPostingComment(Model model,
+                                    @PathVariable("postingId") int postingId,
+                                    @RequestParam("sendId") int sendId,
+                                    @RequestParam("content") String content) {
+        Map<String, String> map = commentService.addComment(0, postingId, sendId, content);
+        model.addAttribute("msg", map.get("msg"));
+        return "";
     }
 }

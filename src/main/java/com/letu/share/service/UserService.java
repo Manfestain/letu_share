@@ -67,14 +67,16 @@ public class UserService {
             return map;
         }
 
-        if (gender == "男") {
+        if (gender.equals("男")) {
             gender = "male";
-        } else if (gender == "女") {
+            System.out.println(gender);
+        } else if (gender.equals("女")) {
             gender = "female";
         } else {
             map.put("msg", "请重新输入性别！");
-            //return map;
+            return map;
         }
+
 
         user = new User();
         user.setName(username);

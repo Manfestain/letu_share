@@ -39,7 +39,7 @@
                 ----------------------------------------------------------------------<br/>
                 名称：${vo.posting.title}<br/>
                 内容：${vo.posting.content}<br/>
-
+                时间：${vo.posting.createdDate?string('yyyy-MM-dd')}<br/>
                 评论总数：${vo.posting.count}<br/>
             </#list>
         </#if>
