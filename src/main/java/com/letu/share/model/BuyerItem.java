@@ -11,8 +11,11 @@ public class BuyerItem {
         if (this == obj) {
             return true;
         }
+        if (obj == null) {
+            return false;
+        }
         Commodity temp = (Commodity) obj;
-        if (this.commodity.getId() == temp.getId()) {
+        if (commodity.getId() == temp.getId()) {
             return true;
         }
         return false;
