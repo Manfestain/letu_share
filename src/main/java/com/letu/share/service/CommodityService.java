@@ -55,6 +55,11 @@ public class CommodityService {
         return commdityDAO.selectByUserId(userId);
     }
 
+    // 通过Id获得商品
+    public Commodity getCommodityById(int Id) {
+        return commdityDAO.selectById(Id);
+    }
+
     // 删除商品
     public Map<String, String>deleteCommodity(int id) {
         Map<String, String> map = new HashMap<String, String>();
