@@ -18,6 +18,11 @@
     ${key}
     ${map["${key}"]}
 </#list>
+<#if flag == "OK">
+    <#list itemList as item>
+        ${itemList.commodity.id}
+    </#list>
+</#if>
 
 </body>
 </html>

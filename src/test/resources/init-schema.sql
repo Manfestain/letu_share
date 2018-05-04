@@ -58,3 +58,23 @@ ENGINE=InnoDB DEFAULT CHARSET=utf8;
 --   `user_id` INT NOT NULL,
 --   PRIMARY KEY (`id`))
 -- ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- CREATE TABLE `letu`.`order` (
+--   `id` INT NOT NULL,
+--   `total_price` INT NOT NULL,
+--   `order_state` INT NOT NULL,
+--   `created_date` DATETIME NOT NULL,
+--   `buyer_id` INT NOT NULL,
+--   `expect_date` DATETIME NOT NULL,
+--   PRIMARY KEY (`id`))
+-- ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- CREATE TABLE `letu`.`order_detail` (
+--   `id` INT NOT NULL AUTO_INCREMENT,
+--   `order_id` INT NOT NULL,
+--   `commodity_id` INT NOT NULL,
+--   `commodity_name` VARCHAR(64) NOT NULL,
+--   `amount` INT NOT NULL,
+--   PRIMARY KEY (`id`))
+-- ENGINE=InnoDB DEFAULT CHARSET=utf8;
+

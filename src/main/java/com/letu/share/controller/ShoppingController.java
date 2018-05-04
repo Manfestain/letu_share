@@ -1,15 +1,20 @@
 package com.letu.share.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.letu.share.model.BuyerItem;
 import com.letu.share.model.Commodity;
+import com.letu.share.model.Order;
 import com.letu.share.model.ShopCart;
 import com.letu.share.service.CommodityService;
+import com.letu.share.service.OrderService;
 import com.letu.share.service.ShopCartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -31,15 +36,16 @@ public class ShoppingController {
     @Autowired
     ShopCartService cartService;
 
+    @Autowired
+    OrderService orderService;
+
     // 加入购物车
-    @RequestMapping(value = {"/shopping/shopcart"}, method = {RequestMethod.POST})
+    @RequestMapping(value = {"/shopping/shopcart/{commodityId}/{amount}"})
     public String shopCart(Model model,
-                           @RequestParam("commodity") Integer commodityId,
-                           @RequestParam("amount") Integer amount,
+                           @PathVariable("commodityId") Integer commodityId,
+                           @PathVariable("amount") Integer amount,
                            HttpServletRequest request,
                            HttpServletResponse response) {
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         ShopCart shopCart = null;
         // 获取Cookie中的购物车
         Cookie[] cookies = request.getCookies();
@@ -47,14 +53,17 @@ public class ShoppingController {
             if (cookies != null && cookies.length > 0) {
                 for (Cookie cookie : cookies) {
                     if ("SHOP_CART".equals(cookie.getName())) {
-                        shopCart = objectMapper.readValue(cookie.getValue(), ShopCart.class);
+                        String temp = new String(java.net.URLDecoder.decode(cookie.getValue(), "UTF-8"));
+//                        System.out.println("second:" + temp);
+                        ShopCart shopCart1 = JSONObject.parseObject(temp, ShopCart.class);
                         break;
                     }
                 }
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             System.out.println(e.toString());
         }
+
         // Cookie中没有购物车，创建购物车对象
         if (shopCart == null) {
             shopCart = new ShopCart();
@@ -62,7 +71,7 @@ public class ShoppingController {
         // 将当前商品添加到购物车
         if (commodityId != null && amount != null) {
             Commodity commodity = new Commodity();
-            commodity.setUserId(commodityId);
+            commodity.setId(commodityId);
             BuyerItem buyerItem = new BuyerItem();
             buyerItem.setCommodity(commodity);
             buyerItem.setAmount(amount);
@@ -81,27 +90,27 @@ public class ShoppingController {
         } else {
             // 没登陆，将购物车保存到cookie中
             try {
-                Writer writer = new StringWriter();
-                objectMapper.writeValue(writer, shopCart);
-                Cookie cookie = new Cookie("SHOP_CART", writer.toString());
+                String jsonString = JSONObject.toJSONString(shopCart);
+                jsonString = java.net.URLEncoder.encode(jsonString, "UTF-8");
+                Cookie cookie = new Cookie("SHOP_CART", jsonString);
                 cookie.setPath("/");
                 cookie.setMaxAge(24 * 60 * 60);
                 response.addCookie(cookie);
-            } catch (IOException e) {
+            } catch (Exception e) {
                 System.out.println(e.toString());
             }
         }
 
         return "redirect:/shopping/toCart";
+//        return "redirect:/";
     }
 
+
     // 购物车界面
-    @RequestMapping(value = {"/shopping/toCart"}, method = {RequestMethod.GET})
+    @RequestMapping(value = {"/shopping/toCart"})
     public String toCart(Model model,
                          HttpServletRequest request,
                          HttpServletResponse response) {
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         ShopCart shopCart = null;
 
         // 获取cookie中的购物车
@@ -110,7 +119,8 @@ public class ShoppingController {
             if (cookies != null && cookies.length > 0) {
                 for (Cookie cookie : cookies) {
                     if ("SHOP_CART".equals(cookie.getName())) {
-                        shopCart = objectMapper.readValue(cookie.getValue(), ShopCart.class);
+                        String temp = new String(java.net.URLDecoder.decode(cookie.getValue(), "UTF-8"));
+                        shopCart = JSONObject.parseObject(temp, ShopCart.class);
                         break;
                     }
                 }
@@ -118,6 +128,7 @@ public class ShoppingController {
         } catch (IOException e) {
             System.out.println(e.toString());
         }
+
         String username = null;
         if (username != null) {
             // 登陆，并且购物车有东西，则将购物车保存达到redis中
@@ -141,7 +152,7 @@ public class ShoppingController {
                 buyerItem.setCommodity(commodityService.getCommodityById(buyerItem.getCommodity().getId()));
             }
         }
-        model.addAttribute("shopCart", shopCart);
+        model.addAttribute("itemList", shopCart.getItemList());
         return "shopCart";
     }
 
@@ -159,5 +170,16 @@ public class ShoppingController {
 
         }
         return "order";
+    }
+
+    // 提交订单
+    @RequestMapping(value = {"/shopping/submitOrder"})
+    public String submitOrder(Model model,
+                              HttpServletRequest request,
+                              HttpServletResponse response) {
+        String username = null;
+        Order order = null;
+        orderService.addOrder(order, username);
+        return "";
     }
 }
