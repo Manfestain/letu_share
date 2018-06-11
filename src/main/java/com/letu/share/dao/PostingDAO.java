@@ -24,4 +24,7 @@ public interface PostingDAO {
     @Update({"update", TABLE_NAME, "set comment_count=#{commentCount} where id=#{id}"})
     int updateCommentCount(@Param("commentCount") int commentCount,
                            @Param("id") int id);
+
+    @Select({"select * from", TABLE_NAME, "order by created_date desc limit 3"})
+    List<Posting> selectByLasteDate();
 }

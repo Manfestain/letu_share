@@ -1,49 +1,123 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>个人主页</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-</head>
-<body>
-    <div class="index-header">
-        <h1 class="logo hide-text"><img src="../images/res/nk.png" alt=""></h1>
-        <img class="Avatar" src="${user.headURL}" width="50", height="50"><br/>
-        <h4 class="subtitle">
-            <font color="#dc143c">${user.name}，欢迎回来！</font>
-        </h4>
-        性别：${user.gender}<br/>
-        电话：${user.phone}<br/>
-    </div>
-    ----------------------------------------------------------------------------------<br/>
-    <div>
-        <form id="postingForm" method="post">
-            <input type="hidden" name="_xsrf" value="21aa1c8d254df2899b23ab9afbd62a53">
-            <div class="group-inputs">
-                <div class="email input-wrapper">
-                    <input type="" name="title" aria-label="主题" placeholder="主题" required="">
-                </div>
-                <div class="input-wrapper">
-                    <input type="text" name="content" aria-label="内容" placeholder="内容" required="" width="200", height="100">
-                </div>
-            </div>
-            <div class="button-wrapper command clearfix">
-                <button class="sign-button submit" type="submit" onclick="form=document.getElementById('postingForm');form.action='/person/${user.id}/addposting'">发布</button>
-            </div>
-        </form>
-    </div>
-    -------------------------------------------------------------------------------------<br/>
-    <div>
-        <#if flag == "OK">
-            <#list vos as vo>
-                ----------------------------------------------------------------------<br/>
-                <a href="/posting/${vo.posting.id}/">名称：${vo.posting.title}</a><br/>
-                内容：${vo.posting.content}<br/>
-                时间：${vo.posting.createdDate?string('yyyy-MM-dd')}<br/>
-                评论总数：${vo.posting.count}<br/>
-            </#list>
-        </#if>
-    </div>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../favicon.ico">
 
-</body>
+    <title>乐途在线</title>
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link href="css/navbar-static-top.css" rel="stylesheet">
+    <link href="css/carousel.css" rel="stylesheet">
+  </head>
+
+  <body>
+
+    <!-- Static navbar -->
+    <nav class="navbar navbar-default navbar-static-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#"></a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="/">主页</a></li>
+            <li><a href="#about">关于</a></li>
+            <li><a href="#contact">联系</a></li>
+
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <#if login_flag == true>
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">我的 <span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                  <li><a href="#">我的主页</a></li>
+                  <li><a href="#">购物车</a></li>
+                  <li role="separator" class="divider"></li>
+                  <li><a href="#">注销</a></li>
+                </ul>
+              </li>
+              <#else>
+                <li><a href="/login">登陆</a></li>
+                <li><a href="/register">注册</a></li>
+            </#if>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+
+      <div class="container">
+        <div class="jumbotron">
+          <div class="row">
+
+            <div class="col-md-8">
+              <div class="row">
+                <div class="col-md-4">
+                  <img class="img-circle center-block" src="${user.headURL}" alt="Generic placeholder image" width="140" height="140">
+                </div>
+                <div class="col-md-8">
+                  <p>昵称：${user.name}</p>
+                  <p>性别：${user.gender}</p>
+                  <p>电话：${user.phone}</p>
+                </div>
+              </div>
+            </div>
+
+
+            <div class="col-md-4">
+              <a href="#" class="list-group-item">购物车</a>
+              <a href="#" class="list-group-item">待开发</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="container">
+        <div class="row">
+          <#list vos as vo>
+            <div class="col-xs-6 col-lg-4">
+              <div class="jumbotron" style="height: 300px">
+              <h3><a href="/person/${user.id}/${vo.posting.id}" >${vo.posting.title}</a></h3>
+              <p>日期：${vo.posting.createdDate?string('yyyy-MM-dd')}</p>
+              <p>评论数：${vo.posting.count}</p><br/>
+              </div>
+            </div><!--/.col-xs-6.col-lg-4-->
+          </#list>
+        </div>
+      </div>
+
+
+    </body>
+
+
+
+    <footer>
+      <div class="container">
+        <p class="pull-right"><a href="#">Back to top</a></p>
+        <p>&copy; 2016 Company, Inc. &middot; <a href="#">Privacy</a> &middot; <a href="#">Terms</a></p>
+      </div>
+
+    
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
+    <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
+  </body>
 </html>

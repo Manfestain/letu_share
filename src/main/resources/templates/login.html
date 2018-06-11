@@ -1,35 +1,86 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>登陆</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-</head>
-<body>
-    <div class="index-header">
-        <h1 class="logo hide-text"><img src="../images/res/nk.png" alt=""></h1>
-        <h2 class="subtitle">
-            <#if msg != "">
-                <font color="#dc143c">${msg}</font>
-                <#else>
-                    与世界分享你的知识、经验和见解
-            </#if>
 
-        </h2>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <link rel="icon" href="../../favicon.ico">
+
+  <title>Signin Template for Bootstrap</title>
+
+  <!-- Bootstrap core CSS -->
+  <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+  <link href="css/ie10-viewport-bug-workaround.css" rel="stylesheet">
+  <!-- Custom styles for this template -->
+  <link href="css/signin.css" rel="stylesheet">
+  <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+  <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+  <![endif]-->
+</head>
+
+<body>
+
+<nav class="navbar navbar-default navbar-static-top">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#"></a>
     </div>
-    <form id="regloginform" method="post">
-        <input type="hidden" name="_xsrf" value="21aa1c8d254df2899b23ab9afbd62a53">
-        <div class="group-inputs">
-            <div class="email input-wrapper">
-                <input type="text" name="username" aria-label="用户名" placeholder="用户名" required="">
-            </div>
-            <div class="input-wrapper">
-                <input type="password" name="password" aria-label="密码" placeholder="密码" required="">
-            </div>
-        </div>
-        <div class="button-wrapper command clearfix">
-            <button class="sign-button submit" type="submit" onclick="form=document.getElementById('regloginform');form.action='/loginaction/'">登录</button>
-        </div>
-    </form>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li class="active"><a href="/">主页</a></li>
+        <li><a href="#about">关于</a></li>
+        <li><a href="#contact">联系</a></li>
+
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div>
+</nav>
+
+<div class="container">
+  <div class="row">
+    <div class="jumbotron">
+      <div class="col-md-8">
+        <img class="img-responsive center-block" src="img/home.jpg">
+      </div>
+      <div class="col-md-4">
+        <form class="form-signin" method="post" id="loginform">
+          <h2 class="form-signin-heading">请登陆</h2>
+
+          <label for="username" class="sr-only">Email address</label>
+          <input type="text" id="username" name="username" class="form-control" placeholder="username" required autofocus>
+
+          <label for="password" class="sr-only">Password</label>
+          <input type="password" id="password" name="password" class="form-control" placeholder="Password" required>
+
+          <div class="checkbox">
+            <label>
+              <input type="checkbox" value="remember-me"> Remember me
+            </label>
+          </div>
+          <button class="btn btn-lg btn-primary btn-block" type="submit"
+                  onclick="form=document.getElementById('loginform');form.action='/loginaction/'">登陆</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+
+</div> <!-- /container -->
+
+
+<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+<script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
 </body>
 </html>

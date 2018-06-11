@@ -1,49 +1,173 @@
+
 <!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <title>帖子</title>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    </head>
-<body>
-    <div class="index-header">
-        <h1 class="logo hide-text"><img src="../images/res/nk.png" alt=""></h1>
-        <h4 class="subtitle">
-            <font color="#dc143c">${posting.title}</font>
-        </h4>
-        作者：${user.name}<br/>
-        时间：${posting.createdDate?string('yyyy-MM-dd')}<br/>
-        评论数：${posting.count}<br/>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../favicon.ico">
+
+    <title>Blog Template for Bootstrap</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <link href="css/ie10-viewport-bug-workaround.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="../static/css/blog.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+  <nav class="navbar navbar-default navbar-static-top">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#"></a>
+      </div>
+      <div id="navbar" class="navbar-collapse collapse">
+        <ul class="nav navbar-nav">
+          <li class="active"><a href="/">主页</a></li>
+          <li><a href="#about">关于</a></li>
+          <li><a href="#contact">联系</a></li>
+
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+          <#if login_flag == true>
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">我的 <span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li><a href="/person">我的主页</a></li>
+                <li><a href="#">购物车</a></li>
+                <li role="separator" class="divider"></li>
+                <li><a href="#">注销</a></li>
+              </ul>
+            </li>
+            <#else>
+              <li><a href="/login">登陆</a></li>
+              <li><a href="/register">注册</a></li>
+          </#if>
+        </ul>
+      </div><!--/.nav-collapse -->
     </div>
-    ----------------------------------------------------------------------------------<br/>
-    <div>
-        ${posting.content}<br/>
+  </nav>
+
+    <div class="blog-masthead">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#"></a>
+        </div>
+
     </div>
-    <div>
-        <form id="postingForm" method="post">
-            <input type="hidden" name="_xsrf" value="21aa1c8d254df2899b23ab9afbd62a53">
-            <div class="group-inputs">
-                <div class="email input-wrapper">
-                    <input type="" name="title" aria-label="主题" placeholder="主题" required="">
-                </div>
-                <div class="input-wrapper">
-                    <input type="text" name="content" aria-label="内容" placeholder="内容" required="" width="200", height="100">
-                </div>
-            </div>
-            <div class="button-wrapper command clearfix">
-                <button class="sign-button submit" type="submit" onclick="form=document.getElementById('postingForm');form.action='/person/${user.id}/addposting'">发布</button>
-            </div>
-        </form>
-    </div>
-    -------------------------------------------------------------------------------------<br/>
-    <div>
-            <#list vos as vo>
-                ----------------------------------------------------------------------<br/>
-                <img src="${vo.sendU.headURL}" width="20", height="20"><br/>
-                昵称：${vo.sendU.name}<br/>
-                内容：${vo.comment.content}<br/>
-                时间：${vo.comment.createdDate?string('yyyy-MM-dd')}<br/>
-            </#list>
-    </div>
-</body>
+
+    <div class="container">
+
+      <div class="blog-header">
+        <h1 class="blog-title">${posting.title}</h1>
+        <p class="lead blog-description">作者：${user.name}</p>
+        <p class="lead blog-description">时间：${posting.createdDate?string('yyyy-MM-dd')}</p>
+        <hr>
+      </div>
+
+      <div class="row">
+
+        <div class="col-sm-8 blog-main">
+
+          <div >
+
+            <p>${posting.content}</p>
+            <hr>
+
+          </div><!-- /.blog-post -->
+
+
+
+        </div><!-- /.blog-main -->
+
+        <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+          <div class="sidebar-module sidebar-module-inset">
+
+            <h4>回复</h4>
+            <form id="comment" method="post">
+              <div class="form-group">
+                <textarea type="form-control" rows="5" class="form-control" id="content" placeholder="Email"></textarea>
+              </div>
+              <center>
+                <button type="submit active btn-primary" class="btn btn-default">提交</button>
+              </center>
+            </form>
+
+          </div>
+
+
+        </div><!-- /.blog-sidebar -->
+      </div><!-- /.row -->
+
+      <div class="row">
+        <div class="sidebar-module">
+
+            <h4>评论</h4>
+            <ol class="list-unstyled">
+              <div class="jumbotron" style="width:80%">
+                <#list vos as vo>
+                    <div class="row">
+                          <div class="col-md-1">
+                            <a href="/person/${vo.user.id}" ><img width="40px" height="40px" src="${vo.user.headURL}"></a>
+                          </div>
+                          <div class="col-md-2">
+                            <p class="text-info" style="font-size: 10px">${vo.user.name}</p>
+                            <p class="text-muted" style="font-size: 3px">${vo.comment.createdDate?string('yyyy-MM-dd')}</p>
+                          </div>
+                          <div class="col-md-9">
+                            <p style="font-size: 15px">${vo.comment.content}</p>
+                          </div>
+                    </div>
+                  <hr>
+                </#list>
+              </div>
+            </ol>
+
+        </div>
+      </div>
+
+    </div><!-- /.container -->
+
+    <footer class="blog-footer">
+      <p>Blog template built for <a href="http://getbootstrap.com">Bootstrap</a> by <a href="https://twitter.com/mdo">@mdo</a>.</p>
+      <p>
+        <a href="#">Back to top</a>
+      </p>
+    </footer>
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
+    <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
+  </body>
 </html>

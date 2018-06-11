@@ -1,30 +1,21 @@
 package com.letu.share.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.letu.share.model.BuyerItem;
 import com.letu.share.model.Commodity;
 import com.letu.share.model.Order;
 import com.letu.share.model.ShopCart;
-import com.letu.share.service.CommodityService;
-import com.letu.share.service.OrderService;
-import com.letu.share.service.ShopCartService;
+import com.letu.share.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.StringWriter;
-import java.io.Writer;
 import java.util.List;
 
 @Controller
@@ -38,6 +29,12 @@ public class ShoppingController {
 
     @Autowired
     OrderService orderService;
+
+    @Autowired
+    LoginTicketService loginTicketService;
+
+    @Autowired
+    UserService userService;
 
     // 加入购物车
     @RequestMapping(value = {"/shopping/shopcart/{commodityId}/{amount}"})
@@ -79,7 +76,8 @@ public class ShoppingController {
         }
 
         // 判断用户是否登陆
-        String username = null;
+        String username = getUserNameByTicket(cookies);
+        System.out.println("username:" + username);
         if (username != null) {
             // 登陆了, 将购物车追加到Redis中
             cartService.insertShopCartToRedis(shopCart, username);
@@ -129,10 +127,13 @@ public class ShoppingController {
             System.out.println(e.toString());
         }
 
-        String username = null;
+        // 判断用户是否登陆
+        String username = getUserNameByTicket(request.getCookies());
+        System.out.println("购物车：username--" + username);
         if (username != null) {
+
             // 登陆，并且购物车有东西，则将购物车保存达到redis中
-            if (shopCart == null) {
+            if (shopCart != null) {
                 cartService.insertShopCartToRedis(shopCart, username);
                 Cookie cookie = new Cookie("SHOP_CART", null);
                 cookie.setPath("/");
@@ -140,6 +141,7 @@ public class ShoppingController {
                 response.addCookie(cookie);
             }
             // 取出购物车
+
             shopCart = cartService.selectShopCartFromRedis(username);
         }
         if (shopCart == null) {
@@ -181,5 +183,22 @@ public class ShoppingController {
         Order order = null;
         orderService.addOrder(order, username);
         return "";
+    }
+
+    // 获取用户名
+    public String getUserNameByTicket(Cookie[] cookies) {
+        String ticket = null;
+        if (cookies != null && cookies.length > 0) {
+            for (Cookie cookie : cookies) {
+                if ("ticket".equals(cookie.getName())) {
+                    ticket = cookie.getValue();
+                }
+            }
+        }
+        if (ticket != null) {
+            int userId = loginTicketService.getUserIdByTicket(ticket);
+            return userService.getUserById(userId).getName();
+        }
+        return null;
     }
 }

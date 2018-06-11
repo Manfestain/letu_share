@@ -17,6 +17,12 @@ public class CommodityService {
     @Autowired
     CommdityDAO commdityDAO;
 
+    //获得食物
+    public List<Commodity> getLateCommodity() {
+        return commdityDAO.selectLateCommoditys();
+    }
+
+
     // 验证添加的商品信息
     public Map<String, String> addCommodity(String commodityname,
                                             String commoditytype,

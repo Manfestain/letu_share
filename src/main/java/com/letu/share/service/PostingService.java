@@ -26,6 +26,11 @@ public class PostingService {
         return postingDAO.selectById(Id);
     }
 
+    // 获取最新的三个帖子
+    public List<Posting> getLatePosting() {
+        return postingDAO.selectByLasteDate();
+    }
+
     // 通过Id更新评论数
     public Map<String, String> updatePostingCount(int Id) {
         Map<String, String> map = new HashMap<String, String>();

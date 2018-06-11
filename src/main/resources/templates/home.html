@@ -1,0 +1,134 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../favicon.ico">
+
+    <title>乐途在线</title>
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link href="css/navbar-static-top.css" rel="stylesheet">
+    <link href="css/carousel.css" rel="stylesheet">
+  </head>
+
+  <body>
+
+    <!-- Static navbar -->
+    <nav class="navbar navbar-default navbar-static-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#"></a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="/">主页</a></li>
+            <li><a href="#about">关于</a></li>
+            <li><a href="#contact">联系</a></li>
+            
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+              <#if login_flag == true>
+              <li class="dropdown">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">我的 <span class="caret"></span></a>
+                  <ul class="dropdown-menu">
+                    <li><a href="/person">我的主页</a></li>
+                    <li><a href="#">购物车</a></li>
+                    <li role="separator" class="divider"></li>
+                    <li><a href="#">注销</a></li>
+                  </ul>
+              </li>
+              <#else>
+                <li><a href="/login">登陆</a></li>
+                <li><a href="/register">注册</a></li>
+              </#if>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+
+  <div class="jumbotron" >
+      <div class="container">
+
+      <!-- Main component for a primary marketing message or call to action -->
+      
+        <img width=100% height=100% src="img/home.jpg"></div>
+          
+      </div>
+
+  </div> <!-- /container -->
+
+<div class="container marketing">
+
+      <!-- Three columns of text below the carousel -->
+      <div class="row">
+        <div class="col-lg-4">
+          <img class="img-circle" src="img/food.jpg" alt="Generic placeholder image" width="140" height="140">
+          <h2>美食</h2>
+          <p>乡愁就是味觉上的思念，无论一个人在外闯荡多少年，即使口音变了，但对故乡的食物，仍怀无限念意。</p>
+          <p><a class="btn btn-info" href="/food" role="button">详情 &raquo;</a></p>
+        </div><!-- /.col-lg-4 -->
+        <div class="col-lg-4">
+          <img class="img-circle" src="img/scenry.jpg" alt="Generic placeholder image" width="140" height="140">
+          <h2>美景</h2>
+          <p>如果可以,去希腊看看那女神的故园,问一问是谁带给这片土地的圣洁.如果可以,去挪威给每一棵沉睡的大树微笑,轻柔的阳光轻轻地洒落林间,一点一点,灿烂一夏.如果可以,我是否可以访问你,那属于智慧与神秘的生灵,看一下历史如何在巨石阵如饶指柔一样流失......</p>
+          <p><a class="btn btn-info" href="#" role="button">详情 &raquo;</a></p>
+        </div><!-- /.col-lg-4 -->
+        <div class="col-lg-4">
+          <img class="img-circle" src="img/people.jpg" alt="Generic placeholder image" width="140" height="140">
+          <h2>美人</h2>
+          <p>身未动，心已远。
+          梦想，并不奢侈，只要勇敢地迈出第一步。
+          背着背包的路上，看过许多人，听过许多故事，见过旅行风景，就这样，慢慢学会了长大。</p>
+          <p><a class="btn btn-info" href="#" role="button">详情 &raquo;</a></p>
+        </div><!-- /.col-lg-4 -->
+      </div><!-- /.row -->
+
+
+      <!-- START THE FEATURETTES -->
+    <#list vos as vo>
+      <hr class="featurette-divider bg-info" >
+
+      <div class="jumbotron center-block" style="width: 60%" >
+
+        <div class="center-block" >
+          <div class="featurette-heading" style="color:#9400D3 ">${vo.posting.title}</div>
+          <div class="text-info" style="font-size: medium">时间：${vo.posting.createdDate?string('yyyy-MM-dd')}</div>
+          <div class="lead" style="color: #8B8970">${vo.posting.content}</div>
+        </div>
+
+      </div>
+    </#list>
+
+      <!-- /END THE FEATURETTES -->
+
+
+      <!-- FOOTER -->
+      <footer>
+        <p class="pull-right"><a href="#">返回顶部</a></p>
+        <p>&copy; 2016 Company, Inc. &middot; <a href="#">Privacy</a> &middot; <a href="#">Terms</a></p>
+
+    </div><!-- /.container -->
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
+    <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
+  </body>
+</html>

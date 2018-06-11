@@ -1,5 +1,9 @@
 package com.letu.share.Util;
 
+import com.letu.share.dao.UserDAO;
+import com.letu.share.service.LoginTicketService;
+import com.letu.share.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import redis.clients.jedis.Jedis;
 
 import javax.servlet.http.Cookie;
@@ -8,31 +12,32 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.UUID;
 
 public class SessionUtils {
-    private Jedis jedis = new Jedis();
-    private int exp = 60*24*10;
 
-    public static String getCookieSessionId(HttpServletResponse response, HttpServletRequest request) {
-        Cookie[] cookies = request.getCookies();
+    @Autowired
+    UserService userService;
+
+    @Autowired
+    LoginTicketService loginTicketService;
+
+    // 从cookie中获取ticket，并得到userName
+    public String getUserNameByTicket(Cookie[] cookies) {
+        String ticket = null;
+        Integer userId = null;
         if (cookies != null && cookies.length > 0) {
             for (Cookie cookie : cookies) {
-                if ("CSESSIONID".equals(cookie.getName())) {
-                    return cookie.getValue();
+                if ("ticket".equals(cookie.getName())) {
+                    ticket = cookie.getValue();
                 }
             }
         }
-        String csessionId = UUID.randomUUID().toString().replaceAll("-", "");
-        Cookie cookie = new Cookie("CSESSIONID", csessionId);
-        cookie.setPath("/");
-        cookie.setMaxAge(-1);
-        return csessionId;
-    }
-
-
-    public String getAttributerForUsername(String csessionId) {
-        String value = jedis.get(csessionId + ":USER_NAME");
-        if (value != null) {
-            jedis.expire(csessionId + ":USER_NAME", 60*exp);
-            return value;
+        System.out.println("ticket:" + ticket);
+        if (userService == null) {
+            System.out.println("userService is null");
+        }
+        if (userService != null && loginTicketService != null) {
+            userId = loginTicketService.getUserIdByTicket(ticket);
+            System.out.println(String.format("userId: %d", userId));
+            return userService.getUserById(userId).getName();
         }
         return null;
     }

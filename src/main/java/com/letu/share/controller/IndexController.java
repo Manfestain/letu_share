@@ -1,7 +1,9 @@
 package com.letu.share.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.letu.share.model.ShopCart;
+import com.letu.share.model.*;
+import com.letu.share.service.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -10,16 +12,220 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.websocket.Session;
 import java.util.*;
 
 @Controller
 public class IndexController {
 
+    @Autowired
+    PostingService postingService;
+
+    @Autowired
+    CommodityService commodityService;
+
+    @Autowired
+    LoginTicketService loginTicketService;
+
+    @Autowired
+    UserService userService;
+
+    @Autowired
+    CommentService commentService;
+
+//------------------------------------------------------网站首页---------------------------------------------------------
+
     @RequestMapping(path={"/", "/index"})
-    @ResponseBody
-    public String index(HttpSession httpSession) {
-        return "hello letu" + httpSession.getAttribute("msg");
+    public String index(Model model,
+                        HttpServletResponse response,
+                        HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        Cookie[] cookies = request.getCookies();
+        boolean login_flag = false;   // 判断是否登陆
+        List<ViewObject> vos = new ArrayList<ViewObject>();
+
+        for (Cookie cookie : cookies) {
+            if ("ticket".equals(cookie.getName())) {
+                login_flag = true;
+            }
+        }
+
+        List<Posting> postings = postingService.getLatePosting();
+        if (!postings.isEmpty()) {
+            for (Posting posting: postings) {
+                ViewObject vo = new ViewObject();
+                vo.set("posting", posting);
+                vos.add(vo);
+            }
+        }
+
+        model.addAttribute("login_flag", login_flag);
+        model.addAttribute("vos", vos);
+
+        return "home";
     }
+
+    @RequestMapping(path = {"/register"})
+    public String registerin(Model model) {
+        model.addAttribute("msg", "");
+        return "register";
+    }
+
+    @RequestMapping(path = {"/login"})
+    public String login(Model model) {
+        model.addAttribute("msg", "");
+        return "login";
+    }
+
+//------------------------------------------------------------美食主页----------------------------------------------------
+
+    @RequestMapping(path={"/food"})
+    public String foodindex(Model model,
+                        HttpServletResponse response,
+                        HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        Cookie[] cookies = request.getCookies();
+        boolean login_flag = false;   // 判断是否登陆
+        List<ViewObject> vos = new ArrayList<ViewObject>();
+
+        for (Cookie cookie : cookies) {
+            if ("ticket".equals(cookie.getName())) {
+                login_flag = true;
+            }
+        }
+
+        List<Commodity> commodities = commodityService.getLateCommodity();
+        if (!commodities.isEmpty()) {
+            for (Commodity commodity: commodities) {
+                ViewObject vo = new ViewObject();
+                vo.set("food", commodity);
+                vos.add(vo);
+            }
+        }
+
+        model.addAttribute("login_flag", login_flag);
+        model.addAttribute("vos", vos);
+
+        return "food";
+    }
+
+
+//----------------------------------------------------个人主页-----------------------------------------------------------
+
+    @RequestMapping(path={"/person"})
+    public String personindex(Model model,
+                            HttpServletResponse response,
+                            HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        Cookie[] cookies = request.getCookies();
+        boolean login_flag = false;   // 判断是否登陆
+        List<ViewObject> vos = new ArrayList<ViewObject>();
+
+
+
+        for (Cookie cookie : cookies) {
+            if ("ticket".equals(cookie.getName())) {
+                login_flag = true;
+                String ticket = cookie.getValue();
+
+                int userId = loginTicketService.getUserIdByTicket(ticket);
+                List<Posting> postings = postingService.getPostingByUserId(userId);
+                if (!postings.isEmpty()) {
+                    for (Posting posting: postings) {
+                        ViewObject vo = new ViewObject();
+                        vo.set("posting", posting);
+                        vos.add(vo);
+                    }
+                }
+
+                User user = userService.getUserById(userId);
+
+                model.addAttribute("user", user);
+                model.addAttribute("login_flag", login_flag);
+                model.addAttribute("vos", vos);
+            }
+        }
+        return "person";
+    }
+
+    @RequestMapping(path={"/person/{userId}"})
+    public String personindex(Model model,
+                              HttpServletResponse response,
+                              HttpServletRequest request,
+                              @PathVariable(value = "userId") int userId) {
+        HttpSession session = request.getSession();
+        Cookie[] cookies = request.getCookies();
+        boolean login_flag = false;   // 判断是否登陆
+        List<ViewObject> vos = new ArrayList<ViewObject>();
+
+        for (Cookie cookie: cookies) {
+            if ("ticket".equals(cookie.getName())) {
+                login_flag = true;
+            }
+        }
+
+        List<Posting> postings = postingService.getPostingByUserId(userId);
+        if (!postings.isEmpty()) {
+            for (Posting posting: postings) {
+                ViewObject vo = new ViewObject();
+                vo.set("posting", posting);
+                vos.add(vo);
+            }
+        }
+
+        User user = userService.getUserById(userId);
+
+        model.addAttribute("user", user);
+        model.addAttribute("login_flag", login_flag);
+        model.addAttribute("vos", vos);
+
+        return "person";
+    }
+
+//--------------------------------------------博客页---------------------------------------------------------------------
+
+    @RequestMapping(path = {"/person/{userId}/{postingId}"}, method = RequestMethod.GET)
+    public String postingIndex(Model model,
+                               HttpServletRequest request,
+                               HttpServletResponse response,
+                               @PathVariable(value = "userId") int userId,
+                               @PathVariable(value = "postingId") int postingId) {
+        Cookie[] cookies = request.getCookies();
+        boolean login_flag = false;   // 判断是否登陆
+        List<ViewObject> vos = new ArrayList<ViewObject>();
+
+        for (Cookie cookie: cookies) {
+            if ("ticket".equals(cookie.getName())) {
+                login_flag = true;
+            }
+        }
+
+        Posting posting = postingService.getPostingById(postingId);
+        User user = userService.getUserById(userId);
+
+        List<Comment> comments = commentService.getCommentByPostingId(postingId);
+        if (!comments.isEmpty()) {
+            for (Comment comment: comments) {
+                ViewObject vo = new ViewObject();
+                User user_ = userService.getUserById(comment.getSendId());
+                vo.set("comment", comment);
+                vo.set("user", user_);
+                vos.add(vo);
+            }
+        }
+
+        model.addAttribute("vos", vos);
+        model.addAttribute("user", user);
+        model.addAttribute("posting", posting);
+        model.addAttribute("login_flag", login_flag);
+
+        return "posting";
+
+
+    }
+
+
+
 //
 //    ///解析路径中的参数
 //    @RequestMapping(path={"/profill/{groupId}/{userId}"})
@@ -104,15 +310,5 @@ public class IndexController {
 //    public String error(Exception e) {
 //        return "error: " + e.getMessage();
 //    }
-    @RequestMapping(path = {"/register"}, method = {RequestMethod.GET})
-    public String registerin(Model model) {
-        model.addAttribute("msg", "");
-        return "register";
-    }
 
-    @RequestMapping(path = {"/login"}, method = {RequestMethod.GET})
-    public String login(Model model) {
-        model.addAttribute("msg", "");
-        return "login";
-    }
 }

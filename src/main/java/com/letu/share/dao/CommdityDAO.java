@@ -30,5 +30,8 @@ public interface CommdityDAO {
     @Select({"select", SELECT_FIELDS, "from", TABLE_NAME, "where id=#{id}"})
     Commodity selectById(int id);
 
+    @Select({"select * from", TABLE_NAME, "order by id asc limit 10"})
+    List<Commodity> selectLateCommoditys();
+
 
 }
